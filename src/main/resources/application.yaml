@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: ${APP_PROFILE:dev}
+  jpa:
+    open-in-view: false
+
+resilience4j:
+  retry:
+    instances:
+      retryInstance:
+        max-attempts: 4 # Limite máximo de tentativas
+        wait-duration: 4s # Intervalo de tempo entre as tentativas
+        enable-exponential-backoff: true # O intervalo das chamadas fica em sequência de fibonacci
+        retry-exceptions:
+          - org.springframework.web.client.ResourceAccessException

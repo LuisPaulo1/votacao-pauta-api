@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  votacao-pauta-api:
+    image:  csluispaulo/votacao-pauta-api
+    container_name: votacao_pauta
+    restart: always
+    environment:
+      USER_INFO_URL: http://user-info-api:8081
+      DB_HOST: postgres
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "8080:8080"
+    networks:
+      - votacao-network
+    depends_on:
+      - postgres
+      - user-info-api
+
+  user-info-api:
+    image: csluispaulo/user-info-api
+    container_name: user-info
+    restart: always
+    ports:
+      - "8081:8081"
+    networks:
+      - votacao-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: db_votacao_pauta
+    restart: always
+    environment:
+      POSTGRES_DB: "votacao_pauta"
+      POSTGRES_PASSWORD: "root"
+    ports:
+      - "5432:5432"
+    networks:
+      - votacao-network
+
+networks:
+  votacao-network:
+    driver: bridge
